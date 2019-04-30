@@ -1,0 +1,35 @@
+TARGET = svp.test.log liblog.so librecord.so
+.PHONY: all install clean
+
+CC = gcc
+CXX = g++
+LD = ld
+RM = rm -f
+
+SVP_DIST_DIR = /work/g5r2/FAW-VW-CRS3.0-MQB-Soc/FAW-VW-CRS3.0-MQB-Service/dist/g5r2-release
+
+DEFINES = PC_TEST
+INCLUDE_PATH = . $(SVP_DIST_DIR)/svp/include
+LD_LIB_PATH = . $(SVP_DIST_DIR)/svp/lib
+LIBS = log record PocoFoundation PocoJSON
+
+CFLAGS += -std=c++11 -Wall -O2 -Wl,-rpath,.:/usr/local/lib $(addprefix -D, $(DEFINES)) $(addprefix -I, $(INCLUDE_PATH))
+LDFLAGS += $(addprefix -L, $(LD_LIB_PATH)) $(addprefix -l, $(LIBS))
+
+all: $(TARGET)
+
+liblog.so : log.c log.h
+	@$(CC) $^ -fPIC -shared -DPC_TEST -DDEV -g -o $@ -lpthread
+
+#librecord.so : LDFLAGS = -L/usr/local/lib -lPocoFoundation -lPocoJSON
+librecord.so : JsonMgr.* Recorder.*
+	@$(CXX) $^ -std=c++11 -fPIC -shared -DPC_TEST -lPocoJSON -g -o $@
+
+svp.test.log: liblog.so librecord.so
+svp.test.log: test.cpp
+	@$(CXX) $^ $(CFLAGS) $(LDFLAGS) -g -o $@
+
+install: all
+
+clean:
+	$(RM) $(TARGET)

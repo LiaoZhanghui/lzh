@@ -1,0 +1,33 @@
+# only logs with level equal to or higher than $LOG_LEVEL will be output
+# optional levels:
+#   DEBUG
+#   INFO
+#   WARN
+#   ERROR
+#   FATAL
+LOG_LEVEL=INFO
+
+# only logs with level equal to or higher than $LOG_LEVEL_TO_FILE will be written into file
+#LOG_LEVEL_TO_FILE=ERROR
+
+# if specified, the logs of the specified processes will not be output
+# the value is a group of quoted process names, use space or comma to separate the names if several processes are specified
+# a null value means the logs of all processes will be output
+# example: FILTER_PID="svp.svc.audiomgr", "ecoenergy"
+FILTER_PID=""
+
+# write file or not, 0-no(default), 1-yes, currently, not use
+LOG_FILE_FLAG=0
+
+# directory to save the log files
+LOG_DIR=/storage/data/data/log
+
+# how many days of logs will be saved
+LOG_SAVE_DAYS=7
+
+# threshold of single log file size, unit: Megabytes
+# if greater than 10, 10 will be used
+MAX_LOG_FILE_SIZE=10
+
+# max index of daily rotation files, if greater then 5, then 5 will be used; if 0 is set, no rotations
+MAX_DAILY_ROTATION_INDEX=3
