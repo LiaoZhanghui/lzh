@@ -10,18 +10,23 @@
 #include <thread>
 #include <sys/msg.h>
 #include <errno.h>
+#include "log.h"
+#include "ipc.h"
+
+#ifdef SVP_LOG_TAG
+    #undef SVP_LOG_TAG
+#endif
+#define SVP_LOG_TAG     "Client"
 
 using namespace std;
 
-#define PRINT(argfmt, ...) fprintf(stderr, "VRTEST:" argfmt "\r\n", ##__VA_ARGS__);
-#define VR_MSG_KEY 11551
-
-
-typedef struct msg_st
+void PrintNotes()
 {
-    long int msg_type;
-    int32_t  msg_param;
-}VR_Msg;
+    SVP_WARN("missing parameter or wrong parameter");
+    SVP_PRINT("***********************notes...***********************");
+    SVP_PRINT(" please enter message type(numbers) parameter");
+    SVP_PRINT("*********************notes end ***********************");
+}
 
 void MSG_CreatAndSend(long int msgType)
 {
@@ -29,32 +34,23 @@ void MSG_CreatAndSend(long int msgType)
     msgid = msgget((key_t)VR_MSG_KEY, 0666 | IPC_CREAT);
     if (msgid == -1)
     {
-        PRINT("[ERROR] msgget failed errno: %d", errno);
+        SVP_ERROR("msgget failed errno: %d", errno);
         return;
     }
 
     VR_Msg msg;
     msg.msg_type = msgType;
     msg.msg_param = 0;
+    SVP_INFO("send msgtype is %ld, param is %d", msg.msg_type, msg.msg_param);
     if (msgsnd(msgid, (void *)&msg, sizeof(VR_Msg)-sizeof(long int), 0) == -1)
     {
-        PRINT("[ERROR] msgsnd failed");
-    }
-    else
-    {
-        PRINT("send msg[%ld] succeed", msgType);
+        SVP_ERROR("[ERROR] msgsnd failed");
     }
 
     //msgctl(msgid, IPC_RMID, 0);
 }
 
-void PrintNotes()
-{
-    PRINT("******************VR TEST: notes...******************");
-    PRINT("* You can use the following parameters:");
-    PRINT("* missing parameter, please enter the message type");
-    PRINT("******************VR TEST: end **********************");
-}
+
 
 int main(int argc, char **argv)
 {
@@ -73,13 +69,13 @@ int main(int argc, char **argv)
         }
         catch (...)
         {
-            PRINT("input error!");
+            SVP_ERROR("input error!");
             PrintNotes();
             return 0;
         }
 
-        PRINT("type is %d", type);
         MSG_CreatAndSend(type);
     }
+
     return 0;
 }
