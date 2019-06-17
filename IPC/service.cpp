@@ -20,6 +20,20 @@
 
 using namespace std;
 
+void HandleOfMsg(long int msgType)
+{
+    switch(msgType)
+    {
+        case 200:
+        {
+            
+        }
+        break;
+        default:
+        break;
+    }
+}
+
 void MSG_CreatAndRcv( )
 {
     int msgid = -1;
@@ -41,6 +55,7 @@ void MSG_CreatAndRcv( )
             break;
         }
         SVP_INFO("receive msg, message type is %ld", msgData.msg_type);
+        HandleOfMsg(msgData.msg_type);
     }
 
     return;

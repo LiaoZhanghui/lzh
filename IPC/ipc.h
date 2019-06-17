@@ -9,4 +9,10 @@ typedef struct msg_st
     int32_t  msg_param;
 }VR_Msg;
 
+typedef enum msgtype
+{
+    MSG_OPENLOG = 0,
+    MSG_CLOSELOG,
+} msgType;
+
 #endif //__IPC_H__
