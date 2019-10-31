@@ -32,13 +32,17 @@ int GetLastWorldLen(char * str)
 int main()
 {
     char str[4096] = {0};
-    if (scanf("%s", str) == EOF)
+    if (scanf("%[^\n]", str) == EOF)
     {
         return -1;
     }
+    
+    //printf("str is %s\n", str);
     
     int result = GetLastWorldLen(str);
     printf("%d\n", result);
     
     return 0;
 }
+
+
