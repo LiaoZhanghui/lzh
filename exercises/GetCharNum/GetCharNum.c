@@ -8,10 +8,17 @@ int GetCharNum(char * str, char ch)
     if (!str)
         return 0;
     
+    char ch2 = -1;
+    
+    if (ch >= 'a' && ch <= 'z')
+        ch2 = ch + 'A' - 'a';
+    else if (ch >= 'A' && ch <= 'Z')
+        ch2 = ch + 'a' - 'A';
+    
     int result = 0;
     while(*str)
     {
-        if (*str == ch)
+        if (*str == ch || *str == ch2)
             ++result;
         str++;
     }
